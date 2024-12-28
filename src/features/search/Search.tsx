@@ -14,7 +14,7 @@ import { SearchType } from "../../types/search";
 import Grid from "@mui/material/Grid2";
 import Divider from "@mui/material/Divider";
 import Container from "@mui/material/Container";
-import Stack from "@mui/material/Stack";
+import Link from "@mui/material/Link";
 
 export default function Search() {
   const { title, page, type, year, data } = useAppSelector(
@@ -82,13 +82,16 @@ export default function Search() {
         {data?.map((movie) => (
           <Grid key={movie.imdbID} size={{ xs: 2, sm: 4, md: 4 }}>
             <Card sx={{ maxWidth: 345 }}>
-              <CardActionArea>
+              <CardActionArea LinkComponent={Link} href={`/${movie.imdbID}`}>
                 <CardContent>
                   <Typography gutterBottom variant="h6" component="div">
                     {movie.Title}
                   </Typography>
                   <Typography variant="body2" sx={{ color: "text.secondary" }}>
                     {movie.Year}
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                    {movie.imdbID}
                   </Typography>
                 </CardContent>
               </CardActionArea>
