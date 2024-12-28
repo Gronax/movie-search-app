@@ -19,7 +19,7 @@ export default function ListView() {
   const pageCount = Math.ceil(parseInt(totalResults, 10) / 10) || 1;
 
   const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
+    _event: React.ChangeEvent<unknown>,
     value: number
   ) => {
     dispatch(setPage(value));

@@ -1,13 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { SearchState, SearchType, ViewType } from "../../types/search";
+import type { MovieListResponse, SearchState, SearchType, ViewType } from "../../types/search";
 import { searchByTitle } from "./searchApi";
 
 const initialState: SearchState = {
   loading: false,
   title: "pokemon",
   page: 1,
-  data: {},
+  data: {} as MovieListResponse,
   viewType: "list",
   year: '',
 };

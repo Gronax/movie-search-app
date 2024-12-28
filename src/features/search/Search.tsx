@@ -35,28 +35,28 @@ export default function Search() {
   } = useAppSelector((state) => state.search);
   const dispatch = useAppDispatch();
   const debouncedSearchTerm = useDebounce(title, 500);
-  const debouncedYear = useDebounce(year, 500);
+  const debouncedYear = useDebounce(Number(year), 500);
 
   useEffect(() => {
     dispatch(
       searchByTitle({
-        title: debouncedSearchTerm,
+        title: debouncedSearchTerm as string,
         page,
         type,
         year: debouncedYear,
       })
     );
-  }, [debouncedSearchTerm, page, type, debouncedYear]);
+  }, [debouncedSearchTerm, page, type, debouncedYear, dispatch]);
 
   const handleSearchType = (
-    event: React.MouseEvent<HTMLElement>,
+    _event: React.MouseEvent<HTMLElement>,
     newType: SearchType
   ) => {
     dispatch(setSearchType(newType));
   };
 
   const handleViewType = (
-    event: React.MouseEvent<HTMLElement>,
+    _event: React.MouseEvent<HTMLElement>,
     newType: ViewType
   ) => {
     if (newType !== null) {

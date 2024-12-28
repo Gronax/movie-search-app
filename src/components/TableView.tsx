@@ -20,7 +20,7 @@ export default function TableView() {
   const navigate = useNavigate();
 
   const handleChangePage = (
-    event: React.MouseEvent<HTMLButtonElement> | null,
+    _event: React.MouseEvent<HTMLButtonElement> | null,
     newPage: number
   ) => {
     // mui table is 0-based, but our paging logic is 1-based

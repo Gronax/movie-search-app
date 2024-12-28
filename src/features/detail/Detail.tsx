@@ -5,7 +5,6 @@ import { useGetMovieDetailByIdQuery } from "../../services/detail";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Paper from "@mui/material/Paper";
-import CircularProgress from "@mui/material/CircularProgress";
 import Link from "@mui/material/Link";
 import IconButton from "@mui/material/IconButton";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -32,7 +31,7 @@ export default function Detail() {
         sx={{ height: "100vh" }}
       >
         <Typography variant="h5" color="error">
-          {error}
+          {error instanceof Error ? error.message : "An error occurred"}
         </Typography>
       </Stack>
     );
