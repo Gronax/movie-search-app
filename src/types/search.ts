@@ -49,16 +49,14 @@ export interface SearchParam {
   title: string;
   page: number;
   type?: SearchType;
-  year?: number;
+  year?: number | string;
 }
 
-export interface SearchState {
+export interface SearchState extends SearchParam {
   loading: boolean;
-  title: string;
-  page: number;
-  type?: SearchType;
-  year?: number;
-  data: MovieList[];
+  data: MovieListResponse;
+  viewType: ViewType;
 }
 
 export type SearchType = "movie" | "series" | "episode";
+export type ViewType = "list" | "table";

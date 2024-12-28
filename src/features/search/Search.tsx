@@ -1,61 +1,115 @@
 import React, { useEffect } from "react";
 import TextField from "@mui/material/TextField";
 import { searchByTitle } from "./searchApi";
-import { setSearchTitle, setSearchType } from "./searchSlice";
+import {
+  setSearchTitle,
+  setSearchType,
+  setViewType,
+  setYear,
+} from "./searchSlice";
 import { useAppDispatch, useAppSelector } from "../../hooks/useStore";
 import useDebounce from "../../hooks/useDebounce";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import CardActionArea from "@mui/material/CardActionArea";
-import { SearchType } from "../../types/search";
+import { SearchType, ViewType } from "../../types/search";
 import Grid from "@mui/material/Grid2";
 import Divider from "@mui/material/Divider";
 import Container from "@mui/material/Container";
-import Link from "@mui/material/Link";
+import Tooltip from "@mui/material/Tooltip";
+import LoadingSpinner from "../../components/LoadingSpinner";
+import ViewListIcon from "@mui/icons-material/ViewList";
+import ViewModuleIcon from "@mui/icons-material/ViewModule";
+import ListView from "../../components/ListView";
+import TableView from "../../components/TableView";
 
 export default function Search() {
-  const { title, page, type, year, data } = useAppSelector(
-    (state) => state.search
-  );
+  const {
+    title,
+    page,
+    type,
+    year,
+    loading,
+    viewType,
+    data: { Search: movies },
+  } = useAppSelector((state) => state.search);
   const dispatch = useAppDispatch();
   const debouncedSearchTerm = useDebounce(title, 500);
+  const debouncedYear = useDebounce(year, 500);
 
-  const handleChange = (
+  useEffect(() => {
+    dispatch(
+      searchByTitle({
+        title: debouncedSearchTerm,
+        page,
+        type,
+        year: debouncedYear,
+      })
+    );
+  }, [debouncedSearchTerm, page, type, debouncedYear]);
+
+  const handleSearchType = (
     event: React.MouseEvent<HTMLElement>,
     newType: SearchType
   ) => {
     dispatch(setSearchType(newType));
   };
 
-  useEffect(() => {
-    dispatch(searchByTitle({ title: debouncedSearchTerm, page, type, year }));
-  }, [debouncedSearchTerm, page]);
+  const handleViewType = (
+    event: React.MouseEvent<HTMLElement>,
+    newType: ViewType
+  ) => {
+    if (newType !== null) {
+      dispatch(setViewType(newType));
+    }
+  };
+
+  const RenderResult = () => {
+    if (loading) {
+      return <LoadingSpinner />;
+    }
+
+    if (!movies) {
+      return (
+        <Typography variant="h6" color="text.secondary" align="center">
+          No results found
+        </Typography>
+      );
+    }
+
+    return viewType === "list" ? <ListView /> : <TableView />;
+  };
 
   return (
-    <Container maxWidth="lg">
-      <Grid container spacing={2}>
-        <Grid size={4}>
+    <Container maxWidth="lg" sx={{ mt: 4 }}>
+      <Grid container spacing={2} alignItems="center">
+        <Grid size={{ xs: 12, md: 4 }}>
           <TextField
             name="search-input"
             label="Search"
             variant="outlined"
             fullWidth
             margin="dense"
+            autoFocus
             value={title}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
               dispatch(setSearchTitle(event.target.value));
             }}
           />
         </Grid>
-        <Grid size={4}>
+        <Grid
+          size={{ xs: 12, md: 4 }}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <ToggleButtonGroup
             color="primary"
             value={type}
             exclusive
-            onChange={handleChange}
+            onChange={handleSearchType}
             aria-label="Platform"
           >
             <ToggleButton value="movie">Movie</ToggleButton>
@@ -63,42 +117,43 @@ export default function Search() {
             <ToggleButton value="episode">Episode</ToggleButton>
           </ToggleButtonGroup>
         </Grid>
-        <Grid size={4}>
+        <Grid size={{ xs: 12, md: 4 }}>
           <TextField
-            name="search-input"
+            name="year-input"
             label="Year"
             variant="outlined"
             type="number"
+            fullWidth
             margin="dense"
+            value={year}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+              dispatch(setYear(+event.target.value));
+            }}
           />
         </Grid>
       </Grid>
       <Divider sx={{ my: 2 }} />
-      <Grid
-        container
-        spacing={{ xs: 2, md: 3 }}
-        columns={{ xs: 4, sm: 8, md: 12 }}
+      <RenderResult />
+      <ToggleButtonGroup
+        value={viewType}
+        orientation="vertical"
+        exclusive
+        onChange={handleViewType}
+        aria-label="view"
+        size="large"
+        sx={{ position: "fixed", top: 16, right: 16 }}
       >
-        {data?.map((movie) => (
-          <Grid key={movie.imdbID} size={{ xs: 2, sm: 4, md: 4 }}>
-            <Card sx={{ maxWidth: 345 }}>
-              <CardActionArea LinkComponent={Link} href={`/${movie.imdbID}`}>
-                <CardContent>
-                  <Typography gutterBottom variant="h6" component="div">
-                    {movie.Title}
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                    {movie.Year}
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                    {movie.imdbID}
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+        <Tooltip title="List View" placement="left">
+          <ToggleButton value="list" aria-label="list view">
+            <ViewModuleIcon />
+          </ToggleButton>
+        </Tooltip>
+        <Tooltip title="Table View" placement="left">
+          <ToggleButton value="table" aria-label="table view">
+            <ViewListIcon />
+          </ToggleButton>
+        </Tooltip>
+      </ToggleButtonGroup>
     </Container>
   );
 }

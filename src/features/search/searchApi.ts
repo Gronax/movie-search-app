@@ -17,6 +17,6 @@ export const searchByTitle = createAsyncThunk(
         y: params.year,
       },
     });
-    return res.data.Search;
+    return res.data;
   }
 );

@@ -6,6 +6,10 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Paper from "@mui/material/Paper";
 import CircularProgress from "@mui/material/CircularProgress";
+import Link from "@mui/material/Link";
+import IconButton from "@mui/material/IconButton";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 export default function Detail() {
   const params = useParams();
@@ -16,16 +20,7 @@ export default function Detail() {
   } = useGetMovieDetailByIdQuery(params?.imdbID as string);
 
   if (isFetching) {
-    return (
-      <Stack
-        direction="row"
-        justifyContent="center"
-        alignItems="center"
-        sx={{ height: "100vh" }}
-      >
-        <CircularProgress />
-      </Stack>
-    );
+    return  <LoadingSpinner />;
   }
 
   if (error) {
@@ -55,6 +50,9 @@ export default function Detail() {
         minHeight: "100vh",
       }}
     >
+      <IconButton aria-label="back" LinkComponent={Link} href="/" size="large">
+        <ArrowBackIcon />
+      </IconButton>
       <Paper elevation={3} sx={{ padding: 4, flex: 1 }}>
         <Grid container spacing={2}>
           <Grid size={{ xs: 12 }}>
@@ -84,7 +82,12 @@ export default function Detail() {
               </Typography>
             </Grid>
           </Grid>
-          <Grid size={{ xs: 12, md: 9 }} container spacing={2} direction="column">
+          <Grid
+            size={{ xs: 12, md: 9 }}
+            container
+            spacing={2}
+            direction="column"
+          >
             <Typography variant="body1">{movie?.Plot}</Typography>
             <Typography variant="body1">
               <strong>Writer:</strong> {movie?.Writer}
