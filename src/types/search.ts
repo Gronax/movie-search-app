@@ -49,7 +49,7 @@ export interface SearchParam {
   title: string;
   page: number;
   type?: SearchType;
-  year?: number | string;
+  year?: number;
 }
 
 export interface SearchState extends SearchParam {

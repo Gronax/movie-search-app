@@ -13,8 +13,8 @@ export const searchByTitle = createAsyncThunk(
         apikey: API_KEY,
         s: params.title,
         page: params.page,
-        type: params.type,
-        y: params.year,
+        ...(params.type && { type: params.type}),
+        ...(params.year && { y: params.year}),
       },
     });
     return res.data;

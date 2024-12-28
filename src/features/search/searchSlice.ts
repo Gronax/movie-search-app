@@ -9,7 +9,6 @@ const initialState: SearchState = {
   page: 1,
   data: {} as MovieListResponse,
   viewType: "list",
-  year: '',
 };
 
 export const searchSlice = createSlice({

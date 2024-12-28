@@ -43,7 +43,7 @@ export default function Search() {
         title: debouncedSearchTerm as string,
         page,
         type,
-        year: debouncedYear,
+        year: debouncedYear as number,
       })
     );
   }, [debouncedSearchTerm, page, type, debouncedYear, dispatch]);
