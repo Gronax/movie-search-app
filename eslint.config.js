@@ -23,6 +23,13 @@ export default tseslint.config(
         'warn',
         { allowConstantExport: true },
       ],
+      // dont allow 3rd level imports from @mui
+      "no-restricted-imports": [
+        "error",
+        {
+          "patterns": ["@mui/*/*/*"]
+        }
+      ]
     },
   },
 )

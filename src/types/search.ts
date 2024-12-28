@@ -31,10 +31,34 @@ export interface Rating {
   Value: string;
 }
 
+export interface MovieListResponse {
+  Search: MovieList[];
+  totalResults: string;
+  Response: string;
+}
+
+export interface MovieList {
+  Title: string;
+  Year: string;
+  imdbID: string;
+  Type: string;
+  Poster: string;
+}
+
+export interface SearchParam {
+  title: string;
+  page: number;
+  type?: SearchType;
+  year?: number;
+}
+
 export interface SearchState {
   loading: boolean;
   title: string;
   page: number;
-  type?: "movie" | "series" | "episode";
+  type?: SearchType;
   year?: number;
+  data: MovieList[];
 }
+
+export type SearchType = "movie" | "series" | "episode";

@@ -1,11 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { SearchState } from "../../types/search";
+import type { SearchState, SearchType } from "../../types/search";
+import { searchByTitle } from "./searchApi";
 
 const initialState: SearchState = {
   loading: false,
-  title: "",
+  title: "pokemon",
   page: 1,
+  data: [],
 };
 
 export const searchSlice = createSlice({
@@ -15,10 +17,17 @@ export const searchSlice = createSlice({
     setSearchTitle: (state, action: PayloadAction<string>) => {
       state.title = action.payload;
     },
+    setSearchType: (state, action: PayloadAction<SearchType>) => {
+      state.type = action.payload;
+    },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(searchByTitle.fulfilled, (state, action) => {
+      state.data = action.payload;
+    });
   },
 });
 
-// Action creators are generated for each case reducer function
-export const { setSearchTitle } = searchSlice.actions;
+export const { setSearchTitle, setSearchType } = searchSlice.actions;
 
 export default searchSlice.reducer;
